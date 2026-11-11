@@ -1,1 +1,198 @@
+/* ============ Squishtopia - style.css ============ */
+:root{
+  --pink:#ff6fa5;
+  --pink-d:#e04b86;
+  --ungu:#7c5cff;
+  --bg:#fff7fb;
+  --teks:#2b2340;
+  --abu:#7b7590;
+  --kartu:#fff;
+  --hijau:#1fa971;
+  --merah:#e5484d;
+}
 
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--teks);
+  line-height:1.5;
+}
+
+button{font:inherit;cursor:pointer;border:0}
+
+input,select,textarea{
+  font:inherit;
+  width:100%;
+  padding:10px 12px;
+  border:1.5px solid #e6dff0;
+  border-radius:10px;
+  background:#fff;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ungu)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+
+/* ---------- Header / Navigasi ---------- */
+header{
+  background:#fff;
+  position:sticky;
+  top:0;
+  z-index:20;
+  box-shadow:0 2px 12px rgba(124,92,255,.1);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.logo{font-size:1.4rem;font-weight:800;color:var(--pink-d);cursor:pointer}
+.menu{display:flex;gap:8px;align-items:center}
+.menu button{background:transparent;padding:8px 12px;border-radius:999px;font-weight:600;color:var(--teks)}
+.menu button:hover{background:#f3edff}
+.cart-btn{background:var(--ungu)!important;color:#fff!important}
+.badge{background:var(--pink);color:#fff;border-radius:999px;padding:0 8px;margin-left:4px;font-size:.8rem}
+
+/* ---------- Hero ---------- */
+.hero{
+  background:linear-gradient(135deg,#ffd6e8,#d9ccff);
+  border-radius:24px;
+  padding:40px 28px;
+  margin:24px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.hero h1{font-size:2rem;margin-bottom:8px}
+.hero p{color:#4a4262;max-width:480px}
+.hero .big{font-size:5rem}
+
+/* ---------- Tombol ---------- */
+.btn{background:var(--pink);color:#fff;padding:11px 20px;border-radius:12px;font-weight:700;transition:.2s}
+.btn:hover{background:var(--pink-d)}
+.btn.sec{background:#efe9ff;color:var(--ungu)}
+.btn.sec:hover{background:#e2d8ff}
+.btn.full{width:100%}
+.btn:disabled{background:#cfc9dc;color:#fff;cursor:not-allowed}
+
+/* ---------- Toolbar pencarian ---------- */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.toolbar input{flex:2;min-width:180px}
+.toolbar select{flex:1;min-width:140px}
+
+/* ---------- Katalog produk ---------- */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:18px;
+  margin-bottom:40px;
+}
+.card{
+  background:var(--kartu);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 4px 16px rgba(43,35,64,.07);
+  transition:.2s;
+  display:flex;
+  flex-direction:column;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(124,92,255,.18)}
+.thumb{height:150px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;cursor:pointer}
+.card .body{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cat{font-size:.75rem;color:var(--ungu);font-weight:700;text-transform:uppercase}
+.nama{font-weight:700;cursor:pointer}
+.harga{color:var(--pink-d);font-weight:800;font-size:1.1rem}
+.stok{font-size:.85rem;color:var(--abu)}
+.stok.low{color:#d9822b;font-weight:600}
+.stok.out{color:var(--merah);font-weight:600}
+.stars{color:#f5b301;font-size:.9rem}
+.card .aksi{margin-top:auto;display:flex;gap:8px}
+.card .aksi button{flex:1;padding:9px;border-radius:10px;font-weight:700}
+
+/* ---------- Halaman & panel ---------- */
+.page{display:none}
+.page.aktif{display:block;animation:muncul .3s ease}
+@keyframes muncul{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h2.judul{margin:24px 0 16px}
+.panel{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 4px 16px rgba(43,35,64,.07);
+  margin-bottom:20px;
+}
+
+/* ---------- Detail produk ---------- */
+.detail{display:grid;grid-template-columns:1fr 1.3fr;gap:24px}
+.detail .gambar{
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:9rem;
+  min-height:280px;
+}
+.qty{display:inline-flex;align-items:center;gap:8px}
+.qty button{width:30px;height:30px;border-radius:8px;background:#efe9ff;color:var(--ungu);font-weight:800}
+.qty button:hover{background:#e2d8ff}
+
+/* ---------- Keranjang & checkout ---------- */
+.row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #f0eaf6}
+.row .ico{font-size:2rem;width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.row .info{flex:1}
+.total{display:flex;justify-content:space-between;padding:6px 0}
+.total.besar{
+  font-weight:800;
+  font-size:1.15rem;
+  color:var(--pink-d);
+  border-top:2px dashed #e6dff0;
+  margin-top:6px;
+  padding-top:12px;
+}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
+
+/* ---------- Review ---------- */
+.review{border-top:1px solid #f0eaf6;padding:10px 0}
+
+/* ---------- Pelacakan pesanan ---------- */
+.track{display:flex;justify-content:space-between;margin:24px 0;position:relative}
+.track .step{flex:1;text-align:center;font-size:.85rem;color:var(--abu);position:relative}
+.track .dot{
+  width:30px;height:30px;border-radius:50%;
+  background:#e6dff0;
+  margin:0 auto 6px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;
+}
+.track .step.on{color:var(--hijau);font-weight:700}
+.track .step.on .dot{background:var(--hijau)}
+
+/* ---------- Lain-lain ---------- */
+.empty{text-align:center;color:var(--abu);padding:40px 0}
+
+#toast{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--teks);
+  color:#fff;
+  padding:12px 20px;
+  border-radius:12px;
+  transition:.3s;
+  z-index:50;
+  opacity:0;
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+footer{text-align:center;color:var(--abu);padding:30px 0;font-size:.9rem}
+
+/* ---------- Responsif (HP) ---------- */
+@media(max-width:760px){
+  .detail,.two{grid-template-columns:1fr}
+  .hero h1{font-size:1.5rem}
+  .hero .big{font-size:3.5rem}
+  .menu button{padding:8px}
+  .track .step{font-size:.72rem}
+}
