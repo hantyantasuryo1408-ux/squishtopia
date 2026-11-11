@@ -1,1 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Squishtopia - Toko Mainan Squishy</title>
+<style>
+  :root{--pink:#ff6fa5;--pink-d:#e04b86;--ungu:#7c5cff;--bg:#fff7fb;--teks:#2b2340;--abu:#7b7590;--kartu:#fff;--hijau:#1fa971;--merah:#e5484d}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--teks);line-height:1.5}
+  button{font:inherit;cursor:pointer;border:0}
+  input,select,textarea{font:inherit;width:100%;padding:10px 12px;border:1.5px solid #e6dff0;border-radius:10px;background:#fff}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ungu)}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+  header{background:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 12px rgba(124,92,255,.1)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+  .logo{font-size:1.4rem;font-weight:800;color:var(--pink-d);cursor:pointer}
+  .menu{display:flex;gap:8px;align-items:center}
+  .menu button{background:transparent;padding:8px 12px;border-radius:999px;font-weight:600;color:var(--teks)}
+  .menu button:hover{background:#f3edff}
+  .cart-btn{background:var(--ungu)!important;color:#fff!important}
+  .badge{background:var(--pink);color:#fff;border-radius:999px;padding:0 8px;margin-left:4px;font-size:.8rem}
+  .hero{background:linear-gradient(135deg,#ffd6e8,#d9ccff);border-radius:24px;padding:40px 28px;margin:24px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .hero h1{font-size:2rem;margin-bottom:8px}
+  .hero p{color:#4a4262;max-width:480px}
+  .hero .big{font-size:5rem}
+  .btn{background:var(--pink);color:#fff;padding:11px 20px;border-radius:12px;font-weight:700}
+  .btn:hover{background:var(--pink-d)}
+  .btn.sec{background:#efe9ff;color:var(--ungu)}
+  .btn.full{width:100%}
+  .btn:disabled{background:#cfc9dc;cursor:not-allowed}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .toolbar input{flex:2;min-width:180px}
+  .toolbar select{flex:1;min-width:140px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;margin-bottom:40px}
+  .card{background:var(--kartu);border-radius:18px;overflow:hidden;box-shadow:0 4px 16px rgba(43,35,64,.07);transition:.2s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(124,92,255,.18)}
+  .thumb{height:150px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;cursor:pointer}
+  .card .body{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .cat{font-size:.75rem;color:var(--ungu);font-weight:700;text-transform:uppercase}
+  .nama{font-weight:700;cursor:pointer}
+  .harga{color:var(--pink-d);font-weight:800;font-size:1.1rem}
+  .stok{font-size:.85rem;color:var(--abu)}
+  .stok.low{color:#d9822b;font-weight:600}
+  .stok.out{color:var(--merah);font-weight:600}
+  .stars{color:#f5b301;font-size:.9rem}
+  .card .aksi{margin-top:auto;display:flex;gap:8px}
+  .card .aksi button{flex:1;padding:9px;border-radius:10px;font-weight:700}
+  .page{display:none}
+  .page.aktif{display:block}
+  h2.judul{margin:24px 0 16px}
+  .panel{background:#fff;border-radius:18px;padding:20px;box-shadow:0 4px 16px rgba(43,35,64,.07);margin-bottom:20px}
+  .detail{display:grid;grid-template-columns:1fr 1.3fr;gap:24px}
+  .detail .gambar{border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:9rem;min-height:280px}
+  .qty{display:inline-flex;align-items:center;gap:8px}
+  .qty button{width:30px;height:30px;border-radius:8px;background:#efe9ff;color:var(--ungu);font-weight:800}
+  .row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #f0eaf6}
+  .row .ico{font-size:2rem;width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .row .info{flex:1}
+  .total{display:flex;justify-content:space-between;padding:6px 0}
+  .total.besar{font-weight:800;font-size:1.15rem;color:var(--pink-d);border-top:2px dashed #e6dff0;margin-top:6px;padding-top:12px}
+  .two{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+  label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
+  .review{border-top:1px solid #f0eaf6;padding:10px 0}
+  .track{display:flex;justify-content:space-between;margin:24px 0;position:relative}
+  .track .step{flex:1;text-align:center;font-size:.85rem;color:var(--abu);position:relative}
+  .track .dot{width:30px;height:30px;border-radius:50%;background:#e6dff0;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+  .track .step.on{color:var(--hijau);font-weight:700}
+  .track .step.on .dot{background:var(--hijau)}
+  .empty{text-align:center;color:var(--abu);padding:40px 0}
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--teks);color:#fff;padding:12px 20px;border-radius:12px;transition:.3s;z-index:50;opacity:0}
+  #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  footer{text-align:center;color:var(--abu);padding:30px 0;font-size:.9rem}
+  @media(max-width:760px){.detail,.two{grid-template-columns:1fr}.hero h1{font-size:1.5rem}.menu button{padding:8px}}
+</style>
+</head>
+<body>
 
+<header>
+  <div class="wrap nav">
+    <div class="logo" onclick="show('home')">🧸 Squishtopia</div>
+    <div class="menu">
+      <button onclick="show('home')">Katalog</button>
+      <button onclick="show('lacak')">Lacak Pesanan</button>
+      <button class="cart-btn" onclick="show('keranjang')">🛒 Keranjang<span class="badge" id="cartCount">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- KATALOG -->
+  <section id="page-home" class="page aktif">
+    <div class="hero">
+      <div>
+        <h1>Squishy lucu, empuk, bikin gemas! 🍑</h1>
+        <p>Koleksi mainan squishy pilihan dengan stok real-time, review pembeli, dan pengiriman ke seluruh Indonesia.</p>
+        <br><button class="btn" onclick="document.getElementById('cari').focus()">Belanja Sekarang</button>
+      </div>
+      <div class="big">🧸🍡🐻</div>
+    </div>
+
+    <div class="toolbar">
+      <input id="cari" placeholder="🔍 Cari produk..." oninput="renderKatalog()">
+      <select id="filterKat" onchange="renderKatalog()"></select>
+      <select id="urut" onchange="renderKatalog()">
+        <option value="">Urutkan</option>
+        <option value="murah">Harga termurah</option>
+        <option value="mahal">Harga termahal</option>
+        <option value="rating">Rating tertinggi</option>
+      </select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- DETAIL -->
+  <section id="page-detail" class="page">
+    <button class="btn sec" onclick="show('home')">← Kembali</button>
+    <div class="panel" style="margin-top:16px" id="detailBox"></div>
+  </section>
+
+  <!-- KERANJANG -->
+  <section id="page-keranjang" class="page">
+    <h2 class="judul">🛒 Keranjang Belanja</h2>
+    <div class="panel" id="cartBox"></div>
+  </section>
+
+  <!-- CHECKOUT -->
+  <section id="page-checkout" class="page">
+    <h2 class="judul">Checkout</h2>
+    <div class="two">
+      <form class="panel" id="formCo" onsubmit="buatPesanan(event)">
+        <h3>Data Penerima</h3>
+        <label>Nama lengkap</label><input id="coNama" required>
+        <label>No. WhatsApp</label><input id="coHp" required pattern="[0-9+]{9,15}" placeholder="08123456789">
+        <label>Alamat lengkap</label><textarea id="coAlamat" rows="3" required></textarea>
+        <label>Wilayah tujuan</label>
+        <select id="coWilayah" onchange="hitungCo()">
+          <option value="1">Jawa</option>
+          <option value="2">Sumatera / Bali / Nusa Tenggara</option>
+          <option value="3">Kalimantan / Sulawesi</option>
+          <option value="4">Maluku / Papua</option>
+        </select>
+        <label>Kurir</label>
+        <select id="coKurir" onchange="hitungCo()">
+          <option value="JNE">JNE Reguler (2-3 hari)</option>
+          <option value="J&T">J&amp;T Express (2-4 hari)</option>
+          <option value="SiCepat">SiCepat Best (1-2 hari)</option>
+        </select>
+        <label>Metode pembayaran</label>
+        <select id="coBayar">
+          <option>Transfer Bank (BCA)</option>
+          <option>QRIS</option>
+          <option>E-Wallet (OVO/GoPay)</option>
+          <option>COD (Bayar di tempat)</option>
+        </select>
+        <br><button class="btn full" type="submit">Buat Pesanan</button>
+      </form>
+      <div class="panel">
+        <h3>Ringkasan Pesanan</h3>
+        <div id="coRingkas"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUKSES -->
+  <section id="page-sukses" class="page">
+    <div class="panel" style="text-align:center;padding:40px 20px" id="suksesBox"></div>
+  </section>
+
+  <!-- LACAK -->
+  <section id="page-lacak" class="page">
+    <h2 class="judul">📦 Lacak Pesanan</h2>
+    <div class="panel">
+      <label style="margin-top:0">Nomor pesanan</label>
+      <div style="display:flex;gap:10px">
+        <input id="noLacak" placeholder="contoh: SQ-123456">
+        <button class="btn" style="white-space:nowrap" onclick="lacak()">Cari</button>
+      </div>
+    </div>
+    <div class="panel" id="lacakBox" style="display:none"></div>
+  </section>
+
+</main>
+
+<footer>© 2026 Squishtopia · Proyek E-Commerce · Data tersimpan di browser (simulasi)</footer>
+<div id="toast"></div>
+
+<script>
+/* ============ DATA PRODUK ============ */
+const PRODUK = [
+  {id:1,nama:"Squishy Mochi Panda",kat:"Mochi",harga:25000,stok:20,emoji:"🐼",warna:"#e8e4ff",berat:"80 g",
+   desc:"Mochi panda super lembut dengan tekstur slow-rising. Aman, tidak berbau menyengat, cocok untuk pereda stres."},
+  {id:2,nama:"Squishy Peach Buns",kat:"Makanan",harga:32000,stok:12,emoji:"🍑",warna:"#ffe1d6",berat:"95 g",
+   desc:"Squishy bentuk roti persik wangi manis. Ukuran jumbo, kembali ke bentuk semula perlahan setelah ditekan."},
+  {id:3,nama:"Squishy Beruang Coklat",kat:"Hewan",harga:28000,stok:15,emoji:"🐻",warna:"#f3e0cc",berat:"85 g",
+   desc:"Beruang coklat imut dengan wajah bordir. Bahan PU foam berkualitas, lentur dan tahan lama."},
+  {id:4,nama:"Squishy Kucing Oren",kat:"Hewan",harga:30000,stok:3,emoji:"🐱",warna:"#ffe9c7",berat:"90 g",
+   desc:"Kucing oren gembul yang menggemaskan. Edisi terbatas, stok sangat sedikit!"},
+  {id:5,nama:"Squishy Es Krim Rainbow",kat:"Makanan",harga:22000,stok:25,emoji:"🍦",warna:"#dff4ff",berat:"70 g",
+   desc:"Es krim warna-warni dengan topping sprinkle. Lembut, ringan, dan cantik dijadikan koleksi."},
+  {id:6,nama:"Squishy Unicorn Pastel",kat:"Fantasi",harga:45000,stok:8,emoji:"🦄",warna:"#fbe0ff",berat:"120 g",
+   desc:"Unicorn ukuran besar warna pastel dengan tanduk glitter. Favorit kolektor squishy."},
+  {id:7,nama:"Squishy Dumpling Lucu",kat:"Makanan",harga:20000,stok:0,emoji:"🥟",warna:"#fff1c9",berat:"60 g",
+   desc:"Dumpling mungil dengan ekspresi wajah lucu. Sementara habis, restock segera."},
+  {id:8,nama:"Squishy Dino Hijau",kat:"Hewan",harga:35000,stok:10,emoji:"🦖",warna:"#d9f7e3",berat:"100 g",
+   desc:"Dino hijau gemoy dengan tekstur ekstra empuk. Cocok untuk hadiah anak maupun dewasa."}
+];
+
+const REVIEW_AWAL = {
+  1:[{n:"Rani",r:5,t:"Lembut banget, gemes! Pengiriman cepat."},{n:"Dimas",r:4,t:"Bagus, sesuai foto."}],
+  2:[{n:"Putri",r:5,t:"Wanginya enak dan ukurannya besar."}],
+  3:[{n:"Salsa",r:5,t:"Lucu banget, dibeliin buat adik."},{n:"Budi",r:4,t:"Kualitas oke untuk harganya."}],
+  4:[{n:"Nadia",r:5,t:"Kucingnya gembul parah, suka!"}],
+  5:[{n:"Tania",r:4,t:"Warnanya cantik, lumayan lembut."}],
+  6:[{n:"Kirana",r:5,t:"Worth it banget, glitternya bagus."},{n:"Aldo",r:5,t:"Kolektor wajib punya."}],
+  7:[{n:"Ayu",r:4,t:"Imut, sayang sekarang habis."}],
+  8:[{n:"Fajar",r:5,t:"Dino-nya empuk, anak saya senang."}]
+};
+
+const ONGKIR = {JNE:9000,"J&T":8000,SiCepat:10000}; // tarif dasar per wilayah x faktor
+const LS = {
+  get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ============ STATE ============ */
+let stokMap  = LS.get("sq_stok",{});      // {id: sisaStok}
+let reviews  = LS.get("sq_review",{});    // {id: [..]}
+let cart     = LS.get("sq_cart",[]);      // [{id,qty}]
+let orders   = LS.get("sq_orders",{});    // {no: order}
+let curId = null;
+
+const rp = n => "Rp" + Number(n).toLocaleString("id-ID");
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const stokDari = p => (p.id in stokMap) ? stokMap[p.id] : p.stok;
+const revDari = id => (reviews[id] || []).concat(REVIEW_AWAL[id] || []);
+const ratingDari = id => {const r=revDari(id);return r.length? r.reduce((a,b)=>a+b.r,0)/r.length : 0};
+const bintang = n => "★".repeat(Math.round(n)) + "☆".repeat(5-Math.round(n));
+const cari = id => PRODUK.find(p=>p.id===id);
+
+function toast(msg){
+  const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+  clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2200);
+}
+function show(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("aktif"));
+  document.getElementById("page-"+name).classList.add("aktif");
+  if(name==="home")renderKatalog();
+  if(name==="keranjang")renderCart();
+  if(name==="checkout")renderCheckout();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ============ KATALOG ============ */
+function initFilter(){
+  const kats=[...new Set(PRODUK.map(p=>p.kat))];
+  document.getElementById("filterKat").innerHTML =
+    '<option value="">Semua kategori</option>'+kats.map(k=>`<option>${k}</option>`).join("");
+}
+function stokLabel(s){
+  if(s<=0)return '<div class="stok out">Stok habis</div>';
+  if(s<=5)return `<div class="stok low">Sisa ${s} — segera habis!</div>`;
+  return `<div class="stok">Stok: ${s}</div>`;
+}
+function renderKatalog(){
+  const q=document.getElementById("cari").value.toLowerCase();
+  const k=document.getElementById("filterKat").value;
+  const u=document.getElementById("urut").value;
+  let list=PRODUK.filter(p=>p.nama.toLowerCase().includes(q)&&(!k||p.kat===k));
+  if(u==="murah")list.sort((a,b)=>a.harga-b.harga);
+  if(u==="mahal")list.sort((a,b)=>b.harga-a.harga);
+  if(u==="rating")list.sort((a,b)=>ratingDari(b.id)-ratingDari(a.id));
+  const g=document.getElementById("grid");
+  if(!list.length){g.innerHTML='<div class="empty" style="grid-column:1/-1">Produk tidak ditemukan 😢</div>';return}
+  g.innerHTML=list.map(p=>{
+    const s=stokDari(p),r=ratingDari(p.id),jml=revDari(p.id).length;
+    return `<div class="card">
+      <div class="thumb" style="background:${p.warna}" onclick="detail(${p.id})">${p.emoji}</div>
+      <div class="body">
+        <div class="cat">${p.kat}</div>
+        <div class="nama" onclick="detail(${p.id})">${p.nama}</div>
+        <div class="stars">${bintang(r)} <span style="color:var(--abu)">(${jml})</span></div>
+        <div class="harga">${rp(p.harga)}</div>
+        ${stokLabel(s)}
+        <div class="aksi">
+          <button class="btn sec" onclick="detail(${p.id})">Detail</button>
+          <button class="btn" ${s<=0?"disabled":""} onclick="tambah(${p.id},1)">+ Keranjang</button>
+        </div>
+      </div></div>`;
+  }).join("");
+}
+
+/* ============ DETAIL ============ */
+function detail(id){
+  curId=id;renderDetail();show("detail");
+}
+function renderDetail(){
+  const p=cari(curId),s=stokDari(p),r=ratingDari(p.id),rv=revDari(p.id);
+  document.getElementById("detailBox").innerHTML=`
+    <div class="detail">
+      <div class="gambar" style="background:${p.warna}">${p.emoji}</div>
+      <div>
+        <div class="cat">${p.kat}</div>
+        <h2>${p.nama}</h2>
+        <div class="stars">${bintang(r)} <span style="color:var(--abu)">${r.toFixed(1)} · ${rv.length} review</span></div>
+        <div class="harga" style="font-size:1.6rem;margin:8px 0">${rp(p.harga)}</div>
+        ${stokLabel(s)}
+        <p style="margin:12px 0">${p.desc}</p>
+        <p class="stok">Berat: ${p.berat} · Bahan: PU foam, aman untuk anak 3+</p>
+        <br>
+        <div class="qty">
+          <button onclick="ubahQ(-1)">−</button><b id="qtyD">1</b><button onclick="ubahQ(1)">+</button>
+        </div>
+        <br><br>
+        <button class="btn" ${s<=0?"disabled":""} onclick="tambah(${p.id},+document.getElementById('qtyD').textContent)">
+          ${s<=0?"Stok Habis":"🛒 Tambah ke Keranjang"}</button>
+      </div>
+    </div>
+    <hr style="border:0;border-top:1px solid #f0eaf6;margin:24px 0">
+    <h3>Review Pembeli</h3>
+    ${rv.map(x=>`<div class="review"><b>${esc(x.n)}</b> <span class="stars">${bintang(x.r)}</span><div>${esc(x.t)}</div></div>`).join("")||'<div class="empty">Belum ada review</div>'}
+    <h3 style="margin-top:20px">Tulis Review</h3>
+    <form onsubmit="kirimReview(event)">
+      <label>Nama</label><input id="rvNama" required maxlength="30">
+      <label>Rating</label>
+      <select id="rvRating"><option value="5">★★★★★ (5)</option><option value="4">★★★★ (4)</option><option value="3">★★★ (3)</option><option value="2">★★ (2)</option><option value="1">★ (1)</option></select>
+      <label>Komentar</label><textarea id="rvIsi" rows="2" required maxlength="300"></textarea>
+      <br><button class="btn" type="submit">Kirim Review</button>
+    </form>`;
+}
+function ubahQ(d){
+  const el=document.getElementById("qtyD"),s=stokDari(cari(curId));
+  el.textContent=Math.max(1,Math.min(s||1,(+el.textContent)+d));
+}
+function kirimReview(e){
+  e.preventDefault();
+  const r={n:document.getElementById("rvNama").value.trim(),r:+document.getElementById("rvRating").value,t:document.getElementById("rvIsi").value.trim()};
+  reviews[curId]=[r].concat(reviews[curId]||[]);
+  LS.set("sq_review",reviews);
+  toast("Review terkirim, terima kasih! 💖");renderDetail();
+}
+
+/* ============ KERANJANG ============ */
+function simpanCart(){LS.set("sq_cart",cart);document.getElementById("cartCount").textContent=cart.reduce((a,b)=>a+b.qty,0)}
+function tambah(id,qty){
+  const p=cari(id),s=stokDari(p);
+  const ada=cart.find(c=>c.id===id);
+  const baru=(ada?ada.qty:0)+qty;
+  if(baru>s){toast(`Stok hanya tersisa ${s}`);return}
+  if(ada)ada.qty=baru;else cart.push({id,qty});
+  simpanCart();toast(`${p.nama} ditambahkan 🛒`);
+}
+function ubahCart(id,d){
+  const c=cart.find(x=>x.id===id),s=stokDari(cari(id));
+  if(!c)return;
+  const n=c.qty+d;
+  if(n>s){toast(`Stok hanya tersisa ${s}`);return}
+  if(n<=0)cart=cart.filter(x=>x.id!==id);else c.qty=n;
+  simpanCart();renderCart();
+}
+function hapusCart(id){cart=cart.filter(x=>x.id!==id);simpanCart();renderCart()}
+const subtotal=()=>cart.reduce((a,c)=>a+cari(c.id).harga*c.qty,0);
+function renderCart(){
+  const b=document.getElementById("cartBox");
+  if(!cart.length){b.innerHTML='<div class="empty">Keranjang masih kosong 🧺<br><br><button class="btn" onclick="show(\'home\')">Mulai Belanja</button></div>';return}
+  b.innerHTML=cart.map(c=>{const p=cari(c.id);return `
+    <div class="row">
+      <div class="ico" style="background:${p.warna}">${p.emoji}</div>
+      <div class="info"><b>${p.nama}</b><div class="harga">${rp(p.harga)}</div></div>
+      <div class="qty"><button onclick="ubahCart(${p.id},-1)">−</button><b>${c.qty}</b><button onclick="ubahCart(${p.id},1)">+</button></div>
+      <button onclick="hapusCart(${p.id})" title="Hapus" style="background:none;font-size:1.2rem">🗑️</button>
+    </div>`}).join("")+
+    `<div class="total besar"><span>Subtotal</span><span>${rp(subtotal())}</span></div>
+     <br><button class="btn full" onclick="show('checkout')">Lanjut ke Checkout</button>`;
+}
+
+/* ============ CHECKOUT ============ */
+function ongkirHitung(){
+  const kurir=document.getElementById("coKurir").value,w=+document.getElementById("coWilayah").value;
+  const berat=Math.max(1,Math.ceil(cart.reduce((a,c)=>a+c.qty,0)/5)); // tiap 5 item = 1 kg
+  return ONGKIR[kurir]*w*berat;
+}
+function renderCheckout(){
+  if(!cart.length){show("keranjang");return}
+  hitungCo();
+}
+function hitungCo(){
+  const o=ongkirHitung(),sub=subtotal();
+  document.getElementById("coRingkas").innerHTML=
+    cart.map(c=>{const p=cari(c.id);return `<div class="total"><span>${p.emoji} ${p.nama} ×${c.qty}</span><span>${rp(p.harga*c.qty)}</span></div>`}).join("")+
+    `<div class="total"><span>Subtotal</span><span>${rp(sub)}</span></div>
+     <div class="total"><span>Ongkos kirim</span><span>${rp(o)}</span></div>
+     <div class="total besar"><span>Total bayar</span><span>${rp(sub+o)}</span></div>`;
+}
+function buatPesanan(e){
+  e.preventDefault();
+  // validasi stok final
+  for(const c of cart){
+    const p=cari(c.id);
+    if(c.qty>stokDari(p)){toast(`Stok ${p.nama} tidak cukup, sisa ${stokDari(p)}`);show("keranjang");return}
+  }
+  const no="SQ-"+Math.floor(100000+Math.random()*900000);
+  const ongkir=ongkirHitung(),sub=subtotal();
+  const kurir=document.getElementById("coKurir").value;
+  orders[no]={
+    no,waktu:Date.now(),
+    nama:document.getElementById("coNama").value.trim(),
+    hp:document.getElementById("coHp").value.trim(),
+    alamat:document.getElementById("coAlamat").value.trim(),
+    kurir,resi:kurir.replace(/\W/g,"").toUpperCase()+Math.floor(1e9+Math.random()*9e9),
+    bayar:document.getElementById("coBayar").value,
+    items:cart.map(c=>({id:c.id,qty:c.qty})),
+    sub,ongkir,total:sub+ongkir
+  };
+  // kurangi stok
+  cart.forEach(c=>{stokMap[c.id]=stokDari(cari(c.id))-c.qty});
+  LS.set("sq_stok",stokMap);LS.set("sq_orders",orders);
+  cart=[];simpanCart();
+  document.getElementById("formCo").reset();
+  document.getElementById("suksesBox").innerHTML=`
+    <div style="font-size:4rem">🎉</div>
+    <h2>Pesanan Berhasil Dibuat!</h2>
+    <p>Nomor pesanan kamu:</p>
+    <h1 style="color:var(--pink-d);margin:8px 0">${no}</h1>
+    <p style="color:var(--abu)">Total ${rp(orders[no].total)} · ${esc(orders[no].bayar)}<br>Simpan nomor ini untuk melacak pesanan.</p><br>
+    <button class="btn" onclick="document.getElementById('noLacak').value='${no}';show('lacak');lacak()">Lacak Pesanan</button>
+    <button class="btn sec" onclick="show('home')">Belanja Lagi</button>`;
+  show("sukses");
+}
+
+/* ============ LACAK PESANAN ============ */
+const TAHAP=[
+  {n:"Pesanan Dibuat",i:"📝",detik:0},
+  {n:"Dikemas",i:"📦",detik:20},
+  {n:"Dikirim",i:"🚚",detik:60},
+  {n:"Selesai",i:"✅",detik:120}
+]; // dipercepat agar mudah didemokan
+let lacakTimer=null;
+function lacak(){
+  const no=document.getElementById("noLacak").value.trim().toUpperCase();
+  const box=document.getElementById("lacakBox");
+  box.style.display="block";
+  clearInterval(lacakTimer);
+  if(!orders[no]){box.innerHTML='<div class="empty">Nomor pesanan tidak ditemukan 🔍</div>';return}
+  const draw=()=>{
+    const o=orders[no],dt=(Date.now()-o.waktu)/1000;
+    let idx=0;TAHAP.forEach((t,i)=>{if(dt>=t.detik)idx=i});
+    box.innerHTML=`
+      <h3>Pesanan ${o.no}</h3>
+      <p class="stok">${new Date(o.waktu).toLocaleString("id-ID")} · Kurir ${esc(o.kurir)} · Resi <b>${o.resi}</b></p>
+      <div class="track">${TAHAP.map((t,i)=>`<div class="step ${i<=idx?"on":""}"><div class="dot">${i<=idx?"✓":i+1}</div>${t.i} ${t.n}</div>`).join("")}</div>
+      <p><b>Penerima:</b> ${esc(o.nama)} (${esc(o.hp)})<br><b>Alamat:</b> ${esc(o.alamat)}</p>
+      <hr style="border:0;border-top:1px solid #f0eaf6;margin:12px 0">
+      ${o.items.map(it=>{const p=cari(it.id);return `<div class="total"><span>${p.emoji} ${p.nama} ×${it.qty}</span><span>${rp(p.harga*it.qty)}</span></div>`}).join("")}
+      <div class="total"><span>Ongkos kirim</span><span>${rp(o.ongkir)}</span></div>
+      <div class="total besar"><span>Total</span><span>${rp(o.total)}</span></div>
+      <p class="stok" style="margin-top:10px">*Status diperbarui otomatis (simulasi dipercepat untuk demo).</p>`;
+    if(idx===TAHAP.length-1)clearInterval(lacakTimer);
+  };
+  draw();lacakTimer=setInterval(draw,3000);
+}
+
+/* ============ INIT ============ */
+initFilter();renderKatalog();simpanCart();
+</script>
+</body>
+</html>
